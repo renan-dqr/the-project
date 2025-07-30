@@ -1,6 +1,8 @@
 name: Build .NET Solution
 
-push:
+# Este workflow é acionado em push ou pull request para branches específicas
+on:
+  push:
     branches:
       - main
       - develop
@@ -8,22 +10,34 @@ push:
     branches:
       - main
       - develop
-      - feature/*
-      - fix/*
-      
+      - 'feature/*'
+      - 'fix/*'
+
 jobs:
+  # O job principal que irá construir e testar o projeto
   build:
+    # Executa no agente mais recente do Ubuntu disponível no GitHub
     runs-on: ubuntu-latest
+
     steps:
+      # 1. Faz o checkout do código do seu repositório
       - name: Checkout code
         uses: actions/checkout@v4
+
+      # 2. Configura o ambiente com a versão especificada do .NET SDK
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '9.0.x'
+          dotnet-version: '9.0.x' # Certifique-se que esta é a versão que seu projeto utiliza
+
+      # 3. Restaura as dependências do projeto (pacotes NuGet)
       - name: Restore dependencies
         run: dotnet restore
+
+      # 4. Compila a solução em modo Release sem restaurar as dependências novamente
       - name: Build
         run: dotnet build --no-restore --configuration Release
+
+      # 5. Executa os testes do projeto sem compilar novamente
       - name: Test
         run: dotnet test --no-build --verbosity normal
