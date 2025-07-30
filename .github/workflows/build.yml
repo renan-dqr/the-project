@@ -1,10 +1,16 @@
 name: Build .NET Solution
 
-    
-  push:
-    branches: [ main, develop ]
+push:
+    branches:
+      - main
+      - develop
   pull_request:
-    branches: [ main, develop, feature/*, fix/* ]
+    branches:
+      - main
+      - develop
+      - feature/*
+      - fix/*
+      
 jobs:
   build:
     runs-on: ubuntu-latest
